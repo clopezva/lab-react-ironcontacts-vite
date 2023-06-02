@@ -12,6 +12,12 @@ function App() {
   function handleClick(e){
     setOrderBy(e.target.id)
   }
+
+  function handleDelete(id){
+    console.log(id)
+    const contactsFiltered = allContacts.filter(contacts => contacts.id !== id)
+    setAllContacts(contactsFiltered)
+  }
   
   let sortedFamous;
   if(orderBy === 'popularity'){
@@ -20,6 +26,9 @@ function App() {
   }else if (orderBy === 'name'){
     sortedFamous = allContacts.sort((f1, f2) => f1.name.localeCompare(f2.name))
   }
+  // }else if (orderBy === 'bothAwards'){
+  //   sortedFamous = allContacts.filter(contact => contact.wonOscar & contact.wonEmmy)
+  // }
 
   return (
     <div className="App">
@@ -27,23 +36,31 @@ function App() {
       <div className="btn">
         <button id="name" onClick={handleClick}>Sort by name</button>
         <button id="popularity" onClick={handleClick}>Sort by popularity</button>
+        {/* <button id="bothAwards" onClick={handleClick}>Someone won both awards?</button> */}
       </div>
       <table>
-        <tr>
-          <th>Picture</th>
-          <th>Name</th>
-          <th>Email Address</th>
-          <th>Won Oscar</th>
-          <th>Won Emmy</th>
-        </tr>
-        {sortedFamous.map((contact, index) => (
-          <tr key={index}>
-            <td><img src={contact.pictureUrl} alt={`Picture of ${contact.name} `} style={{width: '100%' ,height: '130px'}}/></td>
-            <td>{contact.name}</td>
-            <td>{(contact.popularity).toFixed(2)}</td>
-            <td>{contact.wonOscar ? '🏆' : null }</td>
-            <td>{contact.wonEmmy ? '⭐' : null}</td>
+        <thead>
+          <tr>
+            <th>Picture</th>
+            <th>Name</th>
+            <th>Email Address</th>
+            <th>Won Oscar</th>
+            <th>Won Emmy</th>
+            <th>Actions</th>
           </tr>
+        </thead>
+        {sortedFamous.map((contact) => (
+          <tbody key={contact.id}>
+            <tr>
+              <td><img src={contact.pictureUrl} alt={`Picture of ${contact.name} `} style={{width: '100%' ,height: '130px'}}/></td>
+              <td>{contact.name}</td>
+              <td>{(contact.popularity).toFixed(2)}</td>
+              <td>{contact.wonOscar ? '🏆' : null }</td>
+              <td>{contact.wonEmmy ? '⭐' : null}</td>
+              <td><button onClick={() => handleDelete(contact.id)}>Delete</button></td>
+            </tr>
+          </tbody>
+
         ))}
         {/* <tr>
           <td>{allContacts[0].name}</td>
